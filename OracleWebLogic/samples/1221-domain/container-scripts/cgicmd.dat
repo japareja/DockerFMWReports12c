@@ -1,0 +1,101 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                                                 ;
+; OracleAS Reports Services                       ;
+; CGICMD.DAT                                      ;
+;                                                 ;
+; Example CGICMD.DAT Mapping file                 ;
+;                                                 ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+; Syntax:  
+;      KEY : VALUE
+; Where: 
+;	KEY - the first argument of the rwservlet URL request (case sensitive).
+;	VALUE - command line parameters and/or special parameters.
+;
+; Keys can be referenced in the following ways:
+;
+;    1. Parameter on command line to the reports servlet 
+;          e.g. http://machine/servlet/rwservlet?KEY
+;
+;    2. Parameter on command line to a reports jsp 
+;          e.g. http://machine/mydir/myreport.jsp?KEY
+;
+;    3. Within a reports jsp - in the rw:report custom tag 
+;          e.g. <rw:report parameters="KEY">
+; 
+; In addition to the Reports Server command line parameters, VALUE can include special parameters
+; represented as "%X", where X identifies the parameter. Currently recognized special
+; parameters: 
+;
+;  %0 - %9 - 0..9 arguments from original rwservlet URL request. Note that %0 refers to the key itself. 
+;  %* - entire contents (all arguments) of original rwservlet URL request. 
+;  %D - request users to input database userid everytime they run the report.
+;  %P - request for report parameter form in HTML format. It generates the PARAMFORM=HTML 
+;       construction on the first submission of the URL and PARAMFORM=NO upon parameter form submission. 
+; CGICMD.DAT Usage Notes
+;   1. Multiple keys in this file MUST be separated by an EXTRA empty line.
+;   2. Extra spaces are ignored. Multi-line entries allowed. 
+;   3. Lines starting with ";" character are treated as a comments. 
+;   4. Comments within a key or key value are NOT allowed. 
+;   5. NLS language support is provided and can be used (encoding should match the one 
+;      used in HTML request - no language conversion of any kind is attempted.
+;   6. For %P special parameter, HTML format is by default mapped to the HTMLTABLE format in this release. 
+;      The HTML format in the future may be mapped to the HTMLCSS format. 
+;
+;;;;;;;;;;;; Example Key Entries
+;  Example 1:  Run a simple breakb report and output to HTML 
+;orqa: report=breakb.rdf destype=cache desformat=html server=repserver 
+
+; Example 2: prompt for userid the first time, then use database userid stored in the cookie subsequently.
+;report_defaultid: report=breakb.rdf destype=cache desformat=html server=repserver 
+
+; Example 3: use %D to require user authentication every time 
+;report_secure: report=breakb.rdf destype=cache desformat=html server=repserver %D
+
+; Example 4:  Take all arguments from URL and send it to the reports server 
+;run: %*
+
+; Example 5:  Run breakb report with HTML parameter form.
+;breakbparam : report=breakb.rdf destype=cache desformat=html server=repserver userid=scott/tiger@mydb %P
+
+; Example 6: take all URL arguments, and also generate a HTML parameter form   
+;runp: %* %P
+
+; Example 7: Run an Express Report. Replace <MYHOST> with the name of the machine running the Express server. The 
+; builder on-line help explains the rest of the parameters (the /sl, st etc. etc.)
+;express: report=my_expr_rep express_server="server=ncacn_ip_tcp:<MYHOST>/sl=1/st=1/ct=0/sv=1/" desformat=htmlcss userid=scott/tiger@mydb destype=cache server=repserver 
+
+;;;;;;;;;;;; Keys for Reports Demos
+; Using default/in-process server.
+; JSPs 
+;charthyperlink_ias: userid="scott/tiger@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=%DBHOSTNAME%)(PORT=%DBPORT%))(CONNECT_DATA=(SID=%DBSID%)))" %*
+
+;charthyperlink_ids: userid=scott/tiger@ %*
+
+;barcodeweb:         userid=oe 
+
+;parmformjsp:        userid=oe 
+
+;tutorial:           userid=oe 
+
+; Paper Reports
+;xmldata:            userid=oe report=inventory_report.rdf destype=cache p_filelocation="http://%HOSTNAME%:%OC4JPORT%/reports/examples/xml_pds/scripts/" desformat=pdf 
+
+;barcodepaper:       userid=oe report=shippingmanifest.rdf destype=cache desformat=pdf 
+
+;distributionpaper:  userid=oe report=inventory_report_dist.rdf distribute=yes destination=exampledistribution.xml 
+
+;pdfenhancements:    userid=oe report=utf8test.rdf destype=cache desformat=pdf 
+
+;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;; CUSTOM KEYS    ;;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+reports_devel: SERVER=rep_server1 ENVID=envid_devel USERID=SCOTT/TIGER@BDPRU.WORLD DESTYPE=cache DESFORMAT=PDF %*
+
+report_integ: SERVER=rep_server1 ENVID=envid_integ USERID=SCOTT/TIGER@BDPRU.WORLD DESTYPE=cache DESFORMAT=PDF %*
+
+

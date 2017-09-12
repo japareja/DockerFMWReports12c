@@ -1,0 +1,11 @@
+################# TNS ENTRIES #####################
+
+ORA11 =
+ (DESCRIPTION = 
+   (ADDRESS_LIST =
+     (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.1.0)(PORT = 1521))
+   )
+ (CONNECT_DATA =
+   (SERVICE_NAME = ORA12)
+ )
+)

@@ -1,0 +1,77 @@
+<?xml version = '1.0' encoding = 'ISO-8859-1'?>
+<server  
+    xmlns="http://xmlns.oracle.com/reports/server"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.oracle.com/reports/server file:%ORACLE_HOME%/reports/schemas/rwserverconf.xsd"
+   version="11.0.0.0.0">
+   
+   <cache class="oracle.reports.cache.RWCache">
+      <property name="cacheSize" value="50"/>
+      <!--property name="cacheDir" value="your cache directory"/-->
+      <!--property name="ignoreParameters" value="parameter names to be ignored in constructing cache key, separated by comma ','"/-->
+   </cache>
+   <!--Please do not change the id for reports engine.-->
+   <!--The class specifies below is subclass of _EngineClassImplBase and implements EngineInterface.-->
+   <engine id="rwEng" class="oracle.reports.engine.EngineImpl" maxEngine="1" minEngine="1" engLife="50" >
+      <!--property name="sourceDir" value="your reports source directory"/-->
+      <!--property name="tempDir" value="your reports temp directory"/-->
+      <!--property name="keepConnection" value="yes"/-->
+   </engine>
+   <engine id="rwURLEng" class="oracle.reports.urlengine.URLEngineImpl" maxEngine="1" minEngine="0" engLife="50" />
+   <!--security id="rwJaznSec" class="oracle.reports.server.RWJAZNSecurity"/-->
+      <!--destination destype="oraclePortal" class="oracle.reports.server.DesOraclePortal">
+            <property name="portalUserid" value="%PORTAL_DB_USERNAME%/%PORTAL_DB_PASSWORD%@%PORTAL_DB_TNSNAME%" encrypted="no"/>
+   </destination-->
+   
+   <!--security id="rwSec" class="oracle.reports.server.RWSecurity">
+   </security-->
+   
+   <destination destype="ftp" class="oracle.reports.plugin.destination.ftp.DesFTP"/>
+   <destination destype="WebDav" class="oracle.reports.plugin.destination.webdav.DesWebDAV"/>
+ 
+   <job jobType="report" engineId="rwEng"/>
+   <job jobType="rwurl" engineId="rwURLEng"/>
+   <notification id="mailNotify" class="oracle.reports.server.MailNotify">
+      <property name="succnotefile" value="succnote.txt"/>
+      <property name="failnotefile" value="failnote.txt"/>
+   </notification>
+   <!--notification id="wfNotify" class="oracle.reports.server.WorkflowNotify">
+      <property name="connStr" value="%WF_DB_USERNAME%/%WF_DB_PASSWORD%@%WF_DB_TNSNAME%" encrypted="no"/>
+   </notification-->
+   <!--jobStatusRepository class="oracle.reports.server.JobRepositoryDB">
+      <property name="repositoryConn" value="repo_db_username/repo_db_password@repo_db_tnsname" encrypted="no"/>
+   </jobStatusRepository-->
+   
+   <connection maxConnect="50" idleTimeOut="15">
+   </connection>
+   <queue maxQueueSize="1000"/>
+   <!--jobRecovery auxDatFiles="yes"/-->
+   <!--
+      The value of the 'identifier' element is encrypted and is of the form SERVERACCESSKEY_USER/SERVERACCESSKEY_PASSWORD 
+
+      SERVERACCESSKEY_USER and SERVERACCESSKEY_PASSWORD in <server>.conf and targets.xml
+      file should match for Reports EM pages to display data correctly.
+
+      Corresponding entries of username and password in targets.xml:
+      <Property NAME="Password" VALUE="SERVERACCESSKEY_PASSWORD" ENCRYPTED="FALSE"/>
+      <Property NAME="UserName" VALUE="SERVERACCESSKEY_USER" ENCRYPTED="FALSE"/>  
+   -->
+   <identifier encrypted="no">%SERVERACCESSKEY_USER%/%SERVERACCESSKEY_PASSWORD%</identifier>
+   
+   <environment id="envid_devel">
+     <envVariable name="NLS_LANG" value="SPANISH_SPAIN.WE8ISO8859P1"/>
+     <envVariable name="NLS_CURRENCY" value="EUR"/>
+     <envVariable name="NLS_NUMERIC_CHARACTERS" value=",."/>
+     <envVariable name="LC_NUMERIC" value="en_EN"/>
+     <envVariable name="DISPLAY" value="172.18.0.1:0.0"/>
+     <envVariable name="REPORTS_PATH" value="/usr/reports/desarrollo/"/>
+   </environment>
+   <environment id="envid_integ">
+     <envVariable name="NLS_LANG" value="SPANISH_SPAIN.WE8ISO8859P1"/>
+     <envVariable name="NLS_CURRENCY" value="EUR"/>
+     <envVariable name="NLS_NUMERIC_CHARACTERS" value=",."/>
+     <envVariable name="LC_NUMERIC" value="en_EN"/>
+     <envVariable name="DISPLAY" value="172.18.0.1:0.0"/>
+     <envVariable name="REPORTS_PATH" value="/usr/reports/integracion/"/>
+   </environment>   
+</server>
