@@ -32,7 +32,7 @@ sudo docker build -t oracle:weblogicInfraDomain 1221-domain --network oranet --b
 docker run -d --name wlsadminInfra --hostname wlsadminInfra --network oranet -p 7001:7001 -v /var/container-volumes/reports:/usr/reports -p 7002:7002 -p 9001:9001 -p 9002:9002 -p 8453:8453 oracle:weblogicInfraDomain
 
 
-### Post-Installation for Reports Server
+## Post-Installation for Reports Server
 **IMPORTANT:** This tasks I would liked to be fully unattended with some scripts as others image build commands, but due to lack of time, I stoped development.
 
 1º Get inside container:
@@ -76,17 +76,17 @@ createReportsServerInstance(instanceName='rep_server1',machine='AdminServerMachi
 ## Localization and NLS
 I made changes to set local time to Spain, global NLS to SPANISH_SPAIN.WE8ISO8859P15 and envid NLS_LANG to SPANISH_SPAIN.WE8ISO8859P1
 
-### Why FMW 12.2.1.0.0 version
+## Why FMW 12.2.1.0.0 version
 I Tested with all this scripts and docker files to build 12.2.1.3 and 12.2.1.2 and for an unknown reason to me, this images didn´t work or simply failed to build. If you made improvements to build this new distribution version, let me know.
   
 **IMPORTANT:** Only tested for development purpose, if you intend to use for production, do it at your own risk.
  
 
-### RCU silent execution
+## RCU silent execution
 During image build, RCU is executed in silent mode, so if need to change example´s SYS password (oracleDocker17) for Repository DB, you need to edit passwordfile.txt on /container-scripts. First password is SYS password of DB, and second line is password for new repository schemas. I recomend you to set it the same, or you will need to modify crFRExtension.py script and Dockerfile.
 
 
-### TO DO
+## TO DO
 As I wrote don´t have much time right now to improve this images, so feel free to make them better and share your improvements, I will review and commit to this project.
 If there is more people interested on this project, I will try to find some time to finish my work.
 
